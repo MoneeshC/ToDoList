@@ -14,7 +14,7 @@ export class ToDoComponent implements OnInit{
   constructor() {}
 
   ngOnInit(): void{
-
+    this.getFromLocalStorage();
   }
 
 
@@ -29,28 +29,47 @@ export class ToDoComponent implements OnInit{
     isEditable: false
   })
   
+  this.saveToLocalStorage();
+
   form.reset();
+  }
+
+  getFromLocalStorage(){
+    let valItemList = localStorage.getItem('todolist');
+
+    if(valItemList != null){
+      this.taskArray = JSON.parse(valItemList);
+    }
+  }
+
+  saveToLocalStorage(){
+    let valList = JSON.stringify(this.taskArray);
+    localStorage.setItem('todolist',valList);
   }
 
   onDelete(index: number){
     console.log(index);
 
     this.taskArray.splice(index, 1);
+    this.saveToLocalStorage();
   }
 
   onEdit(index: number){
     this.taskArray[index].isEditable = true;
+    this.saveToLocalStorage();
   }
 
   onCheck(index: number){
     console.log(this.taskArray);
 
     this.taskArray[index].isCompleted = !this.taskArray[index].isCompleted;
+    this.saveToLocalStorage();
   }
 
   onSave(index: number, newtask: string){
     this.taskArray[index].taskName = newtask;
     this.taskArray[index].isEditable = false;
+    this.saveToLocalStorage();
   }
 
 }
